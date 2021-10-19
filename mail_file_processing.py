@@ -2,6 +2,9 @@
 
 import pandas as pd
 import pandas_profiling as pp
+from matplotlib import pyplot as plt
+import seaborn as sns
+import plotly_express as px
 df = pd.read_csv("mail_customers.csv") #import dataset into environment
 print("first 5 rows ")
 print(df.head()) #check if it has been imported correctly, shows first 5 records
@@ -41,8 +44,16 @@ mean_agec = df.groupby("new cat")["Annual Income (k$)"].mean()
 print(mean_agec)
 mean_spend = df.groupby("new cat")['Spending Score (1-100)'].mean()
 print(mean_spend)
+df["Score per $ income"] = df["Spending Score (1-100)"] / df["Annual Income (k$)"]
+mean_score_income = df["Score per $ income"].mean()
+print ("Spending score per k$ income is ",mean_score_income)
 
 
-
+figure = px.scatter(df,x="Spending Score (1-100)", y= "Annual Income (k$)", color="Genre")
+figure.show()
+figure2 = px.scatter(df,x="Age", y= "Annual Income (k$)", color="Genre")
+figure2.show()
+figure3 = px.scatter(df,x="Age", y= "Spending Score (1-100)", color="Genre")
+figure3.show()
 profile = pp.ProfileReport(df)
 profile.to_file("Summaryreport.html") #takes a long time to run!
